@@ -38,6 +38,9 @@ idempotente y está desactivado por defecto; no debe habilitarse en producción.
 
 Swagger queda disponible en `http://localhost:8080/swagger-ui.html`.
 
+La referencia de DTOs, enums, errores y mapeo de endpoints para Android está en
+[`docs/FRONTEND_API_TYPES.md`](docs/FRONTEND_API_TYPES.md).
+
 ## Endpoints
 
 | Método | Ruta | Autenticación | Uso |
