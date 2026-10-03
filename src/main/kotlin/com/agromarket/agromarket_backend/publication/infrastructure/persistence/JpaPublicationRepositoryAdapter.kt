@@ -55,10 +55,10 @@ class JpaPublicationRepositoryAdapter(
         val result = publicationRepository.search(
             ownerId = criteria.ownerId,
             statusName = criteria.status?.name,
-            query = criteria.query.cleanNullable(),
+            query = criteria.query.cleanNullable().orEmpty(),
             categoryId = criteria.categoryId,
             productId = criteria.productId,
-            location = criteria.location.cleanNullable(),
+            location = criteria.location.cleanNullable().orEmpty(),
             minPrice = criteria.minPrice,
             maxPrice = criteria.maxPrice,
             availableFrom = criteria.availableFrom,

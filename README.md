@@ -27,6 +27,38 @@ Una cuenta puede operar como compradora y proveedora; no se restringen estas cap
 
 Flyway aplica automáticamente todas las migraciones. Hibernate está configurado en modo `validate`, por lo que no altera el esquema.
 
+## Docker Compose y acceso en LAN
+
+En macOS, instala Docker CLI, Docker Compose y Colima con `brew install docker docker-compose colima`.
+Inicia el motor con `colima start` o configura su inicio automático con `brew services start colima`.
+Desde la raíz del proyecto, con `.env` configurado:
+
+```bash
+docker compose up --build -d
+docker compose ps
+curl http://localhost:8080/api/health
+```
+
+La API estará disponible en `http://IP_DEL_EQUIPO:8080` para dispositivos conectados a la misma red.
+Consulta la IP actual con `ipconfig getifaddr en0` y comprueba `http://IP_DEL_EQUIPO:8080/api/health`.
+Para Android, usa esa dirección como URL base en vez de
+`localhost`. Si macOS solicita permiso para conexiones entrantes, permite el acceso al puerto 8080.
+
+Compose usa el usuario, contraseña y secreto JWT de `.env`. La API se conecta a PostgreSQL por el
+nombre `db` dentro de Compose. PostgreSQL no publica su puerto en la LAN; sus datos permanecen en el
+volumen `postgres_data` después de reiniciar o recrear los contenedores. `docker compose down` detiene
+los servicios sin borrar los datos; `docker compose down -v` sí elimina el volumen y su contenido.
+
+Para ver registros o reconstruir tras cambiar el código:
+
+```bash
+docker compose logs -f api
+docker compose up --build -d
+```
+
+Puedes cambiar el puerto HTTP del host con `API_PORT=8081 docker compose up -d`. En ese caso, la URL
+LAN usa el puerto 8081. Si el puerto elegido está ocupado, libera el puerto o usa `API_PORT`.
+
 Para poblar un entorno local con 12 usuarios, 24 publicaciones, 10 reservas, conversaciones y reseñas:
 
 ```bash

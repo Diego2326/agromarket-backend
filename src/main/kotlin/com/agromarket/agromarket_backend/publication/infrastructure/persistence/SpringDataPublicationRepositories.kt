@@ -21,12 +21,12 @@ interface SpringDataPublicationRepository : JpaRepository<PublicationJpaEntity, 
         SELECT p FROM PublicationJpaEntity p
         WHERE (:ownerId IS NULL OR p.owner.id = :ownerId)
           AND (:statusName IS NULL OR p.status.name = :statusName)
-          AND (:query IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%'))
+          AND (:query = '' OR LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%'))
                OR LOWER(COALESCE(p.description, '')) LIKE LOWER(CONCAT('%', :query, '%'))
                OR LOWER(p.product.name) LIKE LOWER(CONCAT('%', :query, '%')))
           AND (:categoryId IS NULL OR p.category.id = :categoryId)
           AND (:productId IS NULL OR p.product.id = :productId)
-          AND (:location IS NULL OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :location, '%')))
+          AND (:location = '' OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :location, '%')))
           AND (:minPrice IS NULL OR p.price >= :minPrice)
           AND (:maxPrice IS NULL OR p.price <= :maxPrice)
           AND (:availableFrom IS NULL OR p.availableDate >= :availableFrom)
@@ -37,10 +37,10 @@ interface SpringDataPublicationRepository : JpaRepository<PublicationJpaEntity, 
     fun search(
         @Param("ownerId") ownerId: UUID?,
         @Param("statusName") statusName: String?,
-        @Param("query") query: String?,
+        @Param("query") query: String,
         @Param("categoryId") categoryId: Int?,
         @Param("productId") productId: Int?,
-        @Param("location") location: String?,
+        @Param("location") location: String,
         @Param("minPrice") minPrice: BigDecimal?,
         @Param("maxPrice") maxPrice: BigDecimal?,
         @Param("availableFrom") availableFrom: LocalDate?,

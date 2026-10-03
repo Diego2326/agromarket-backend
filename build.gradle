@@ -57,4 +57,5 @@ allOpen {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	environment 'DEMO_DATA_ENABLED', 'false'
 }
