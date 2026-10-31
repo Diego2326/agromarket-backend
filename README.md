@@ -14,6 +14,11 @@ Cada módulo está separado en capas:
 
 Una cuenta puede operar como compradora y proveedora; no se restringen estas capacidades mediante roles separados.
 
+En mensajería, `application` define los puertos de publicación y difusión de mensajes; `presentation` contiene
+los adaptadores REST y WebSocket; `infrastructure/messaging` implementa la publicación PostgreSQL y el listener
+`LISTEN/NOTIFY`. Ambos adaptadores entrantes llaman al mismo servicio de conversación y publican el mensaje
+persistido por el puerto de aplicación.
+
 ## Configuración local
 
 1. Crea la base de datos PostgreSQL `agromarket`.
@@ -116,6 +121,11 @@ La referencia de DTOs, enums, errores y mapeo de endpoints para Android está en
 El listado acepta los parámetros `query`, `categoryId`, `productId`, `location`, `minPrice`, `maxPrice`,
 `availableFrom`, `availableTo`, `minUnitsAvailable`, `page`, `size`, `sort` y `direction`. Los valores de `sort`
 son `DATE_CREATED`, `PRICE` y `AVAILABLE_DATE`.
+
+La mensajería admite `wss://HOST/ws/conversations/{conversationId}` con JWT en `Authorization`. Los mensajes
+se envían como JSON `{"content":"…"}`; tanto los eventos WebSocket como REST se propagan por PostgreSQL
+`LISTEN/NOTIFY`. Consulta [`docs/CLOUD_RUN_NEON.md`](docs/CLOUD_RUN_NEON.md) para preparar Neon y desplegar en
+Cloud Run.
 
 Ejemplo de registro:
 

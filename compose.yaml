@@ -23,6 +23,7 @@ services:
         condition: service_healthy
     environment:
       DB_URL: jdbc:postgresql://db:5432/agromarket
+      DB_LISTENER_URL: jdbc:postgresql://db:5432/agromarket
       DB_USERNAME: ${DB_USERNAME:?Define DB_USERNAME en .env}
       DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
       JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en .env}

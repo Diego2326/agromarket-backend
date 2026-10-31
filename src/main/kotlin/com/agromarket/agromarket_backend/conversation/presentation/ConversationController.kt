@@ -2,6 +2,7 @@ package com.agromarket.agromarket_backend.conversation.presentation
 
 import com.agromarket.agromarket_backend.auth.infrastructure.security.AuthenticatedUser
 import com.agromarket.agromarket_backend.conversation.application.ConversationService
+import com.agromarket.agromarket_backend.conversation.application.ConversationMessagePublisher
 import com.agromarket.agromarket_backend.conversation.domain.Conversation
 import com.agromarket.agromarket_backend.conversation.domain.ConversationMessage
 import jakarta.validation.Valid
@@ -23,6 +24,7 @@ import java.util.UUID
 @RequestMapping("/api/conversations")
 class ConversationController(
     private val conversationService: ConversationService,
+    private val messagePublisher: ConversationMessagePublisher,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,7 +51,12 @@ class ConversationController(
         @AuthenticationPrincipal principal: AuthenticatedUser,
         @PathVariable id: UUID,
         @Valid @RequestBody request: SendMessageRequest,
-    ): MessageResponse = MessageResponse.from(conversationService.send(principal.id, id, request.content))
+    ): MessageResponse {
+        val saved = conversationService.send(principal.id, id, request.content)
+        messagePublisher.publish(saved)
+        val message = MessageResponse.from(saved)
+        return message
+    }
 }
 
 data class StartConversationRequest(val publicationId: UUID)
